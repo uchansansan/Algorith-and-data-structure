@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+struct list {
+    int data;
+    struct list * next;
+};
+
+typedef struct stack {
+    struct list *top;
+} Stack;
+
+Stack * create (){
+    Stack * S;
+    S = (Stack *) malloc (sizeof (Stack));
+    S->top = NULL;
+    return S;
+}
+
+void makenull (Stack *S){
+    while (S->top) {
+        struct list *p = S->top;
+        S->top = p->next;
+        free(p);
+    }
+}
+
+int empty (Stack *S){
+    return (S->top == NULL);
+}
+
+int top (Stack *S){
+    return (S->top->data);
+}
+
+int pop(Stack *S){
+    int a;
+    struct list *p;
+    p = S->top;
+    a = p->data;
+    S-> top = p->next;
+    free(p);
+    return a;
+}
+
+void push(Stack *S, int a ){
+    struct list *p;
+    p = (struct list *) malloc ( sizeof (struct list));
+    p->data = a;
+    p->next = S-> top;
+    S->top = p ;
+}
+
+
+int main(){
+    Stack *s = create();
+    char str[2000]={0};
+    gets(str);
+    char *x;
+    char del[10]=" ";
+    int n = strlen(str);
+    int n1,n2;
+    char *istr = strtok (str, del);
+    while (istr != NULL){
+    	if(istr[0]=='+'){
+    		n1 = pop(s);
+            n2 = pop(s);
+            push(s,n1+n2);
+    	}
+    	else if(istr[0]=='-'){
+    		n1 = pop(s);
+            n2 = pop(s);
+            push(s,n2-n1);
+    	}
+    	else if(istr[0]=='*'){
+    		n1 = pop(s);
+            n2 = pop(s);
+            push(s,n2*n1);
+    	}
+    	else if(istr[0]=='/'){
+    		n1 = pop(s);
+            n2 = pop(s);
+            push(s,n2/n1);
+    	}
+    	else{
+    		push(s, atoi(istr));
+
+    	}
+
+
+        istr = strtok (NULL, del);
+    }
+    printf("%d", pop(s));
+    return 0;
+}
